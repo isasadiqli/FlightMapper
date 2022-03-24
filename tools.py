@@ -170,6 +170,9 @@ def fix_time_digit(i):
 
 
 def create_kml():
+    frames = []
+    for i in os.listdir("image_frames"):
+        frames.append(str(i))
 
     df = pd.read_csv("files/output.csv")
 
@@ -177,7 +180,7 @@ def create_kml():
 
     app = QApplication(sys.argv)
     web = QWebEngineView()
-
+    env.window.withdraw()
 
     year = df['year']
     month = df['month']
@@ -196,9 +199,6 @@ def create_kml():
     second = fix_time_digit(second)
 
     lines = []
-
-    pic = QLabel(web)
-    pic.setGeometry(10, 10, int(192 * 2), int(108 * 2))
 
     i = 1
     for degree_lat, minute_lat, second_lat, direction_lat, degree_lon, minute_lon, second_lon, direction_lon in zip(
@@ -222,7 +222,7 @@ def create_kml():
 
         location = float(latitude), float(longitude)
 
-        # folium.Marker(location=location, popup=str(i)).add_to(map_)
+        # folium.Marker(location=location, popup=str(i), draggable=True).add_to(map_)
         # if i != 1:
         #     folium.PolyLine((prev_loc, location)).add_to(map_)
 
@@ -239,47 +239,52 @@ def create_kml():
                         second[i - 1]],
                     "color": "red"})
 
-        if i * 200 < 1000:
-            path = os.getcwd() + "/image_frames/frame0" + str(i * 200)
-        else:
-            path = os.getcwd() + "/image_frames/frame" + str(i * 200)
+        # if i * 200 < 1000:
+        #     path = os.getcwd() + "/image_frames/frame0" + str(i * 200)
+        # else:
+        #     path = os.getcwd() + "/image_frames/frame" + str(i * 200)
 
-        pic.setPixmap(
-            QPixmap(os.getcwd() + "/image_frames/frame" + str(i * 200)).scaled(int(192 * 2), int(108 * 2)))
-
-        print(path)
-
+        # print(path)
 
         i += 1
 
-    pic.show()
     kml.save('files/coordinates.kml')
     # map_.save('map.html')
 
-    print('l', lines)
-    features = [
-        {
-            "type": "Feature",
-            "geometry": {
-                "type": "LineString",
-                "coordinates": line["coordinates"],
-            },
-            "properties": {
-                "icon": 'marker',
-                "iconstyle": {
-                    'iconSize': [50, 50],
-                    'iconUrl': str(pathlib.Path().resolve().as_uri()) + '/res/plane_marker.png'},
-                "times": line["dates"],
-                "style": {
-                    "color": line["color"],
-                    "weight": line["weight"] if "weight" in line else 2,
-                
-                },
+    i = 0
+    features = []
+    for line in lines:
 
-            },
-        }
-        for line in lines
-    ]
+        features.append(
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": line["coordinates"],
+                },
+                "properties": {
+                    "icon": 'marker',
+                    "iconstyle": {
+                        'iconSize': [50, 50],
+                        'iconUrl': str(pathlib.Path().resolve().as_uri()) + '/res/plane_marker.png'},
+                    "popup":
+                        '<img src= "' + str(pathlib.Path().resolve().as_uri()) + '/image_frames/' + frames[i] + '"'
+                        'width="640"'
+                        'height="360"/>',
+
+                    "times": line["dates"],
+                    "style": {
+                        "color": line["color"],
+                        "weight": line["weight"] if "weight" in line else 2,
+
+                    },
+
+                },
+            }
+        )
+
+        print(frames[i])
+        i += 1
 
     plugins.TimestampedGeoJson(
         {
@@ -309,5 +314,17 @@ def create_kml():
     web.setGeometry(0, 0, 1915, 1035)
     web.showMaximized()
 
+    # pic = QLabel(web)
+
+    # pic.setPixmap(
+    #     QPixmap(os.getcwd() + "/image_frames/frame" + str(i * 200)).scaled(int(192 * 2), int(108 * 2)))
+    # pic.setGeometry(10, 10, int(192 * 2), int(108 * 2))
+    # pic.show()
+
+    # web.setHtml(HTML_STR, QUrl.FromLocalFile(os.path.dirname(os.path.realpath(__file__))))
+
     # window.show()
+
+
     sys.exit(app.exec_())
+

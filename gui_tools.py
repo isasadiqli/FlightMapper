@@ -7,6 +7,7 @@ from tkinter.ttk import *
 import PySimpleGUI as sg
 
 import environment as env
+import sys
 
 
 class ToolTip(object):

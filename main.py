@@ -33,16 +33,16 @@ def thread_handling():
         t.start()
 
 
-def thread_handling_for_cvs():
-    t = threading.Thread(target=show_csv)
-    if not t.is_alive():
-        t.daemon = True
-        t.start()
-    else:
-        t.join()
-        t = threading.Thread(target=show_csv)
-        t.daemon = True
-        t.start()
+# def thread_handling_for_cvs():
+#     t = threading.Thread(target=show_csv)
+#     if not t.is_alive():
+#         t.daemon = True
+#         t.start()
+#     else:
+#         t.join()
+#         t = threading.Thread(target=show_csv)
+#         t.daemon = True
+#         t.start()
 
 
 def fun():
@@ -63,15 +63,11 @@ def thread_handling_for_map():
         env.thread_map[env.t_m].start()
 
         env.t_m += 1
-
-
     else:
         env.thread_map[env.t_m - 1].join()
         thread_map = (threading.Thread(target=tools.create_kml))
         thread_map.daemon = True
         thread_map.start()
-
-
 
     # t = threading.Thread(target=tools.create_kml)
     # if not env.thread_map.is_alive():
