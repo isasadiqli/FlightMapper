@@ -38,7 +38,6 @@ This project was developed as part of a graduation project at Ankara Yildirim Be
 | `gui_tools.py`      | GUI implementation using Tkinter for user interaction. |
 | `environment.py`    | Configuration and setup (paths, parameters). |
 | `words.txt`         | Dictionary for verifying and correcting OCR results. |
-| `res/`              | Resource folder for sample inputs and outputs (videos, images, etc.). |
 
 ---
 
