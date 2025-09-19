@@ -1,92 +1,120 @@
 # FlightMapper
 
-FlightMapper is a Python application that extracts, processes, and visualizes flight‑information from image sources (e.g. scanned tickets or boarding passes). It uses Optical Character Recognition (OCR) plus custom logic / GUI tools to map flight data into structured form.
+FlightMapper is a Python application for **flight data analysis, mapping, and simulation** based on **image processing**.  
+It extracts aircraft and target information (location, altitude, time, etc.) from EO/IR camera recordings using **OCR (Optical Character Recognition)**, applies preprocessing and anomaly correction, and visualizes movements on maps.  
+
+This project was developed as part of a graduation project at Ankara Yildirim Beyazit University.
 
 ---
 
 ## Features
 
-- OCR-based text extraction from images.  
-- GUI tools for assisting in manual correction / verification of OCRed content.  
-- Parsing and mapping of extracted words into structured flight‐related data.  
-- An environment module to setup needed configurations.  
-- Tools for cleaning, filtering, or enhancing OCR output.  
+- **Video Processing**
+  - Splits aircraft EO/IR recordings into frames using OpenCV.
+  - Applies preprocessing (masking, blurring, thresholding, dilating) to enhance text readability.
+  - Crops relevant regions to isolate flight data.
+
+- **Data Extraction**
+  - Uses **Tesseract OCR** to recognize flight information from frames.
+  - Supports anomaly detection and correction for OCR errors (using statistical and dictionary-based methods).
+
+- **Data Handling**
+  - Saves processed data into **CSV files** for reuse without reprocessing.
+  - Generates **KML files** for geographic visualization of aircraft and target routes.
+
+- **Visualization & Simulation**
+  - Displays extracted routes and targets on map applications (via KML).
+  - Provides a **GUI (Tkinter-based)** for selecting inputs, controlling FPS, monitoring process status, and exporting results.
 
 ---
 
 ## Project Structure
 
-| File / Module | Purpose |
-|---|---|
-| `environment.py` | Configuration settings, environment setup, possibly managing API‐keys, paths, or thresholds. |
-| `ocr.py` | Handles OCR operations – reading images, extracting text, preprocessing for better recognition. |
-| `tools.py` | General utility/helper functions used across the application. |
-| `gui_tools.py` | Graphical user interface components to assist users in reviewing and editing extracted data. |
-| `main.py` | Entry point of the application; orchestrates calling OCR, GUI tools, parsing, etc. |
-| `words.txt` | A dictionary / wordlist used in processing or verifying OCR output (e.g. to check for valid words). |
-| `res/` | Resources directory (e.g. images, templates, sample data). |
+| File / Module       | Purpose |
+|---------------------|---------|
+| `main.py`           | Entry point of the program. Runs preprocessing, OCR, anomaly detection, and visualization. |
+| `ocr.py`            | Handles OCR operations on processed frames. |
+| `tools.py`          | Utility functions (e.g. anomaly detection, corrections, data handling). |
+| `gui_tools.py`      | GUI implementation using Tkinter for user interaction. |
+| `environment.py`    | Configuration and setup (paths, parameters). |
+| `words.txt`         | Dictionary for verifying and correcting OCR results. |
+| `res/`              | Resource folder for sample inputs and outputs (videos, images, etc.). |
 
 ---
 
 ## Requirements
 
-- Python 3.x  
-- OCR library (e.g. [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) or any other used library)  
-- GUI toolkit (e.g. Tkinter, PyQt, etc.—depending what `gui_tools.py` uses)  
-- Any other python packages (e.g. `pillow`, `opencv`, `numpy`)  
+- Python 3.x
+- [Tesseract OCR](https://github.com/tesseract-ocr/tesseract)
+- Required Python packages:
+  - `opencv-python`
+  - `pytesseract`
+  - `pillow`
+  - `numpy`
+  - `tkinter` (standard with Python on most systems)
+  - `pyenchant` (for dictionary-based corrections)
 
-You can install the dependencies via:
+Install dependencies via:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-*(If a `requirements.txt` does not yet exist, you may generate one by inspecting imports and using `pip freeze`.)*
-
 ---
 
 ## Usage
 
-1. Place your image(s) containing flight tickets, boarding passes, or other relevant printed text into a designated folder.  
-2. Run the application via:
+1. Install Tesseract OCR and make sure it is accessible from your system PATH.  
+2. Run the program:
 
    ```bash
    python main.py
    ```
 
-3. The OCR module will process the image(s), extract raw text.  
-4. Use the GUI tools to view, verify, and correct any OCR errors or misparsed words.  
-5. Final output will be structured data capturing the flight relevant fields (flight number, date, time, origin, destination, etc.).
+3. In the GUI, you can:
+   - Select a video file for processing.
+   - Adjust **FPS (frames per second)** to balance speed and accuracy.
+   - Choose to process an existing CSV file instead of a video.
+   - Export results as **CSV** or **KML**.
+   - Monitor process status with a progress bar.
+
+4. Open the generated **KML file** in Google Earth or another map application to view the aircraft and target paths.
 
 ---
 
-## Possible Improvements / TODOs
+## Results
 
-- Add unit tests for the parsing logic.  
-- Improve error handling when OCR fails or images are low-quality.  
-- Support more image formats and batch processing.  
-- Add export functionality (e.g. JSON, CSV) for structured flight data.  
-- Internationalization support (different languages/fonts).  
+- Correctly extracts and visualizes flight paths in most scenarios.  
+- Anomaly detection corrects ~80% of OCR errors.  
+- Works best with higher FPS and higher-quality video (less noisy frames).  
+- Limitations remain with very noisy video and distorted characters.  
+
+---
+
+## Future Improvements
+
+- Enhance preprocessing for noisy video.  
+- Integrate **machine learning classification** for better accuracy.  
+- Apply fuzzy logic or distance-based anomaly correction.  
+- Improve GUI with more simulation features.  
 
 ---
 
 ## Contributing
 
-Contributions are welcome! If you want to contribute:
-
-1. Fork the repository.  
-2. Create a new branch for your feature or bugfix.  
-3. Commit your changes with clear messages.  
-4. Submit a pull request.  
+Contributions, bug reports, and suggestions are welcome!  
 
 ---
 
 ## License
 
-*(Specify license here, e.g. MIT, Apache 2.0, etc. If none yet, consider adding one.)*
+*(Please add the appropriate license, e.g. MIT, if open source.)*
 
 ---
 
-## Contact
+## Authors
 
-For questions or feedback, contact [Your Name or Maintainer] at [Email / GitHub].  
+- İsa Sadiqli  
+- Muhammed Mustafa Kapucu  
+- Şükrü Fırtına  
+- Supervised by Dr. Fahreddin Şükrü Torun  
