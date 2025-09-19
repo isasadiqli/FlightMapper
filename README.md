@@ -100,18 +100,6 @@ pip install -r requirements.txt
 
 ---
 
-## Contributing
-
-Contributions, bug reports, and suggestions are welcome!  
-
----
-
-## License
-
-*(Please add the appropriate license, e.g. MIT, if open source.)*
-
----
-
 ## Authors
 
 - İsa Sadiqli  
